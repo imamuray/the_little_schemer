@@ -160,3 +160,15 @@
       ((> n m) #f)
       ((< n m) #f)
       (else #t))))
+
+(define <^>
+  (lambda (n m)
+    (cond
+      ((zero? m) 1)
+      (else (<*> n (<^> n (sub1 m)))))))
+
+(define </>
+  (lambda (n m)
+    (cond
+      ((< n m) 0)
+      (else (add1 (</> (<-> n m) m))))))
