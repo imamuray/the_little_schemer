@@ -172,3 +172,68 @@
     (cond
       ((< n m) 0)
       (else (add1 (</> (<-> n m) m))))))
+
+(define length
+  (lambda (lat)
+    (cond
+      ((null? lat) 0)
+      (else (add1 (length (cdr lat)))))))
+
+(define pick
+  (lambda (n lat)
+    (cond
+      ((null? lat) '())
+      (else
+        (cond
+          ((zero? (sub1 n)) (car lat))
+          (else (pick (sub1 n) (cdr lat))))))))
+
+(define rempick
+  (lambda (n lat)
+    (cond
+      ((null? lat) '())
+      (else
+        (cond
+          ((one? n) (cdr lat))
+          (else (cons (car lat) (rempick (sub1 n) (cdr lat)))))))))
+
+(define no-nums
+  (lambda (lat)
+    (cond
+      ((null? lat) '())
+      (else
+        (cond
+          ((number? (car lat)) (no-nums (cdr lat)))
+          (else (cons (car lat) (no-nums (cdr lat)))))))))
+
+(define all-nums
+  (lambda (lat)
+    (cond
+      ((null? lat) '())
+      (else
+        (cond
+          ((number? (car lat)) (cons (car lat) (all-nums (cdr lat))))
+          (else (all-nums (cdr lat))))))))
+
+(define eqan?
+  (lambda (a1 a2)
+    (cond
+      ((and (number? a1) (number? a2))
+        (= a1 a2))
+      ((or (number? a1) (number? a2))
+        #f)
+      (else (eq? a1 a2)))))
+
+(define occor
+  (lambda (a lat)
+    (cond
+      ((null? lat) 0)
+      (else
+        (cond
+          ((eq? (car lat) a)
+            (add1 (occor a (cdr lat))))
+          (else (occor a (cdr lat))))))))
+
+(define one?
+  (lambda (n)
+    (= n 1)))
