@@ -224,16 +224,47 @@
         #f)
       (else (eq? a1 a2)))))
 
-(define occor
+(define occur
   (lambda (a lat)
     (cond
       ((null? lat) 0)
       (else
         (cond
           ((eq? (car lat) a)
-            (add1 (occor a (cdr lat))))
-          (else (occor a (cdr lat))))))))
+            (add1 (occur a (cdr lat))))
+          (else (occur a (cdr lat))))))))
 
 (define one?
   (lambda (n)
     (= n 1)))
+
+(define rember*
+  (lambda (a l)
+    (cond
+      ((null? l) '())
+      ((atom? (car l))
+        (cond
+          ((eq? (car l) a) (rember* a (cdr l)))
+          (else (cons (car l) (rember* a (cdr l))))))
+      (else (cons (rember* a (car l)) (rember* a (cdr l)))))))
+
+(define insertR*
+  (lambda (new old l)
+    (cond
+      ((null? l) '())
+      ((atom? (car l))
+        (cond
+          ((eq? (car l) old)
+            (cons old (cons new (insertR* new old (cdr l)))))
+          (else (cons (car l) (insertR* new old (cdr l))))))
+      (else (cons (insertR* new old (car l)) (insertR* new old (cdr l)))))))
+
+(define occur*
+  (lambda (a l)
+    (cond
+      ((null? l) 0)
+      ((atom? (car l))
+        (cond
+          ((eq? (car l) a) (add1 (occur* a (cdr l))))
+          (else (occur* a (cdr l)))))
+      (else (<+> (occur* a (car l)) (occur* a (cdr l)))))))
