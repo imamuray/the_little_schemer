@@ -317,3 +317,50 @@
       ((and (atom? s1) (atom? s2)) (eqan? s1 s2))
       ((or (atom? s1) (atom? s2)) #f)
       (else (eqlist? s1 s2)))))
+
+(define numbered?
+  (lambda (aexp)
+    (cond
+      ((atom? aexp) (number? aexp))
+      ((eq? (car (cdr aexp)) '+)
+        (and (numbered? (car aexp)) (numbered? (car (cdr (cdr aexp))))))
+      ((eq? (car (cdr aexp)) '*)
+        (and (numbered? (car aexp)) (numbered? (car (cdr (cdr aexp))))))
+      ((eq? (car (cdr aexp)) '<^>)
+        (and (numbered? (car aexp)) (numbered? (car (cdr (cdr aexp))))))
+      (else #f))))
+
+(define value
+  (lambda (nexp)
+    (cond
+      ((atom? nexp) nexp)
+      ((eq? (operator nexp) '+)
+        (<+> (value (1st-sub-exp nexp)) (value (2nd-sub-exp nexp))))
+      ((eq? (operator nexp) '*)
+        (<*> (value (1st-sub-exp nexp)) (value (2nd-sub-exp nexp))))
+      (else
+        (<^> (value (1st-sub-exp nexp)) (value (2nd-sub-exp nexp)))))))
+
+(define 1st-sub-exp
+  (lambda (aexp)
+    (car (cdr aexp))))
+
+(define 2nd-sub-exp
+  (lambda (aexp)
+    (car (cdr (cdr aexp)))))
+
+(define operator
+  (lambda (aexp)
+    (car aexp)))
+
+(define sero?
+  (lambda (n)
+    (null? n)))
+
+(define edd1
+  (lambda (n)
+    (cons '() n)))
+
+(define zub1
+  (lambda (n)
+    (cdr n)))
